@@ -27,11 +27,14 @@ public class AndroidTestView implements PlatformView , MethodChannel.MethodCallH
     Map<String,Object> params;
     TextView mAndroidTextView;
 
+    private final String CHNANEL_PRE = "TextView";
     public AndroidTestView(Context context, BinaryMessenger messenger, int id, Map<String,Object> params){
         this.context = context;
         this.id = id;
         this.messenger = messenger;
         this.params = params;
+        MethodChannel channel = new MethodChannel(messenger, CHNANEL_PRE+id);
+        channel.setMethodCallHandler(this);
         initTextView();
     }
 

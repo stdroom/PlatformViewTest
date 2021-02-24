@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+typedef CallBack = void Function(int id);
+
 class PlatformTextWidget extends StatefulWidget {
 
-  PlatformTextWidget({this.text});
-
+  PlatformTextWidget({this.text,this.callBack});
   final String text;
+  final CallBack callBack;
 
   @override
   _PlatformTextWidgetState createState() => _PlatformTextWidgetState();
@@ -27,11 +29,16 @@ class _PlatformTextWidgetState extends State<PlatformTextWidget> {
         // 用来编码 creationParams 的形式，可选 [StandardMessageCodec], [JSONMessageCodec], [StringCodec], or [BinaryCodec]
         // 如果存在 creationParams，则该值不能为null
         creationParamsCodec: const StandardMessageCodec(),
+        onPlatformViewCreated: this.onMyViewCreated,
       );
 
     }else{
       return Container();
     }
+  }
+
+  void onMyViewCreated(int id){
+    widget.callBack(id);
   }
 
   @override

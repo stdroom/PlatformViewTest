@@ -10,6 +10,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   static MethodChannel channel = new MethodChannel("PlatformViewPlugin");
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -56,7 +57,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-
+  int id = -1;
+  MethodChannel methodChannel;
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -65,6 +67,12 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
+      if(id>=0 && methodChannel==null){
+        methodChannel = new MethodChannel('TextView$id');
+      }
+      if(methodChannel!=null){
+        methodChannel.invokeMethod("setText",'lx:$_counter');
+      }
     });
   }
 
@@ -103,7 +111,13 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
-              child:  PlatformTextWidget(text:"leixun"),
+              child:  PlatformTextWidget(text:"leixun",
+                callBack: (int returnId){
+                  if(returnId>=0){
+                    id= returnId;
+                  }
+                },
+              ),
             ),
             Text(
               'You have pushed the button this many times:',
